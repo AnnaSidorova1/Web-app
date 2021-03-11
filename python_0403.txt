@@ -1,0 +1,93 @@
+from math import sqrt
+import json
+import urllib.request
+
+class User:
+    def __init__(self, id1, name1, usename1, email1, address1, phone1, webs1, comp1):
+        self.id = id1
+        self.name = name1
+        self.username = usename1
+        self.email = email1
+        self.address = address1
+        self.phone = phone1
+        self.website = webs1
+        self.company = comp1
+        self.cnt_todo = 0
+
+class Users:
+    def __init__(self):
+        self.mass = []
+
+    def add(self, User):
+        self.mass.append(User)
+        
+#use1 = User(1, "Anna", "mannkeys", "aaaaa", {"street" : "ster", "suite" : "s1", "geo" : {"a" : "a", "b" : "b"}}, "8-99-654-98-77", "webss", "lkhgfd")
+#print(use1.address)
+with urllib.request.urlopen("https://jsonplaceholder.typicode.com/users") as url:
+    data = json.loads(url.read().decode())
+    #print(json.dumps(data, indent = 5))
+    
+
+#print(data[0]["address"])
+list_users = Users()
+#print(len(data))
+for i in range(0, len(data)):
+    list_users.add(data[i])
+    
+#for i in range(0, len(data)):    
+    #print(list_users.mass[i]["address"]["city"])
+
+min_val = 1000    
+for i in range(0, len(data)):
+    for j in range(i+1, len(data)):
+        x1 = list_users.mass[i]["address"]["geo"]["lat"]
+        y1 = list_users.mass[i]["address"]["geo"]["lng"]
+        x2 = list_users.mass[j]["address"]["geo"]["lat"]
+        y2 = list_users.mass[j]["address"]["geo"]["lng"]
+        s1 = abs(float(x2) - float(x1))
+        s2 = abs(float(y2) - float(y1))
+        length_ = (pow(s1, 0.5) + pow(s2, 0.5))
+        if (length_ < min_val):
+            min_val = length_
+            u1 = list_users.mass[i]
+            u2 = list_users.mass[j]
+
+print("ID пользователей, которые находятся ближе всех друг к другу")
+print(u1["id"])
+print(u2["id"])
+
+
+f = open('D:/Result.txt','w')
+f.flush()
+for i in range(0, len(data)):
+    f.write(json.dumps(data, indent = 5))
+f.close()
+
+#with open('D:/Result.txt', 'w') as outfile:
+#json.dump(data, outfile)
+
+print("Список todo")
+with urllib.request.urlopen("https://jsonplaceholder.typicode.com/todos") as url:
+    data_todo = json.loads(url.read().decode())
+    #print(json.dumps(data_todo, indent = 5))
+    
+#list_todos = []
+#for i in range(0, len(data_todo)):
+#    list_todos.add(data_todo[i])
+    
+tmp = 0 
+for i in range(0, len(data)): 
+    for j in range(0, len(data_todo)):
+        if (list_users.mass[i]["id"] == data_todo[j]["userId"]):
+            tmp+=1
+    list_users.mass[i]["cnt_todo"] = tmp
+    tmp = 0 
+
+for i in range(0, len(data)):
+    print(list_users.mass[i]["cnt_todo"])
+
+f = open('D:/Result_todo.txt','w')
+f.flush()
+for i in range(0, len(data)):
+    f.write(json.dumps(data, indent = 5))
+f.close()
