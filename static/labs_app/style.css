@@ -1,0 +1,22 @@
+
+h1 {
+    color: blue;
+    font-family: verdana;
+    font-size: 300%;
+}
+p {
+    color: red;
+    font-family: courier;
+    font-size: 160%;
+}
+.title{
+    font-size: 36px;
+    padding-top: 10px;
+    text-align: center;
+}
+.menu{
+    list-style: none;
+    position: absolute;
+    top: 10px;
+    right: 100px;
+}

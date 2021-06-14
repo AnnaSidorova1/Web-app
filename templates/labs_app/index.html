@@ -1,0 +1,24 @@
+{% extends 'labs_app/base.html' %}
+
+{% block title %}
+{{  home  }}
+{% endblock %}
+
+{% block content %}
+    <h1>Comments</h1>  
+    {% if comms %}
+        {% for element in comms %}
+        <div class="alert mt-2" style="border-style: outset; background-color: rgb(180, 238, 238);">
+            <h3 style="color:rgb(100,100,200)">{{ element.name }}</h3>
+            <h4>Number of post: {{element.postId}}</h4>
+            <h6 style="color:rgb(160, 160, 204)">Email : {{ element.email }}</h6>
+            
+            <p style="font-style: italic;">{{ element.body }}</p>
+        </div>
+        {% endfor %}
+    {% else %} 
+        <p>Загрузите данные!</p>
+    {% endif %}
+
+{% endblock %}
+

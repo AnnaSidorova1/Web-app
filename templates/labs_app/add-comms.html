@@ -1,0 +1,27 @@
+{% extends 'labs_app/base.html' %}
+
+{% block title %}
+Добавить комментарий
+{% endblock %}
+
+{% block content %}
+<h1 style="color: cornflowerblue;">Добавить комментарий</h1>
+<form method="POST">
+    {% csrf_token %}
+    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+    {{ form.email }}<br>
+    {{ form.name }}<br>
+    {{ form.postId }}<br>
+    <img  src="https://thypix.com/wp-content/uploads/2020/05/fox-23.png" 
+    align="right" width="400">
+    {{ form.body }}<br>
+    {{ form.id_com}}
+    <div class="custom-control custom-checkbox my-1 mr-sm-2">
+        <input type="checkbox" class="custom-control-input" id="customControlInline">
+        <label class="custom-control-label" for="customControlInline">Remember my preference</label>
+    </div>
+    <button style="background-color: rgb(58, 58, 204);" type="submit" class="btn btn-success">Добавить</button>
+    <span>{{ error }}</span>
+</form>
+{% endblock %}
+
