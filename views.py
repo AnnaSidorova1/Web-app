@@ -1,18 +1,12 @@
+from django.http import HttpResponse
 import json
 from labs_app.forms import CommentForm
 import urllib.request
 import requests
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from .models import Comment
-from django.core.exceptions import ValidationError
-from django.core import validators
-import re
 from django.core.validators import validate_email
-
-# def contact(request):
-#   return HttpResponse("<h2>Контакты</h2>")
-#Comment.id_com = Comment.objects.count()
-#print(Comment.id_com) 
+from django.views.generic import DetailView
 
 
 def load_data():
@@ -26,33 +20,20 @@ def load_data():
         com.id_com = r["id"]
         com.save()
 
+
 def index(request):
     #Comment.objects.all().delete()
-    if Comment.objects.count() == 0:
+    if Comment.objects.count() < 500:
         load_data()
     data = Comment.objects.order_by('postId').all()
     return render(request, 'labs_app/index.html', {'home': 'Домашняя страница', 'comms': data })
-
-
-def _validate_email(email):
-    try:
-        re.findall(r"[\w\.-]+@[\w\.-]+(\.[\w]+)+", email)
-    except ValidationError as e:
-        print("bad email222, details:", e)
-        return False
-    else:
-        print("good email222")
-        return True
-    #try : re.findall(r'[\w\.-]+@[\w\.-]+(\.[\w]+)+', email)
-    #except ValidationError:
-    #    return False
 
 
 def about(request):
     error = ''
     if request.method == 'POST':
         form_1 = CommentForm(request.POST)
-        if form_1.is_valid() & _validate_email(form_1["email"]):
+        if form_1.is_valid() :
             form_1.save()
             return redirect('home')
         else:
@@ -67,3 +48,42 @@ def about(request):
 
 def feat(request):
     return render(request, 'labs_app/features.html')
+
+
+def gen_com(request, prod):
+    category = request.GET.get("com", "")
+    output = "<h2> Product № {0}  Category: {1} </h2>".format(prod, category)
+    return HttpResponse(output)
+    data = category
+    return render(request, 'labs_app/test_generate.html', {'gener': 'Сгенерированная страница', 'coms': data})
+    #return HttpResponse(output)
+
+
+def show_post(request, id_c):
+    post = get_object_or_404(Comment, id_com=id_c)
+
+    context = {
+        'post': post,
+        'title' : post.name,
+        'selected_p': post.id_com,
+    }
+
+    return render(request, 'labs_app/test_generate.html', context=context)
+
+
+#class CommentsDetailView(DetailView):
+#    model = Comment
+#    template_name = 'labs_app/test_generate.html'
+#    pk_url_kwarg = 'id_com'
+#    context_object_name = 'comment'
+
+#    def get_object(self):
+#        return get_object_or_404(Comment, id_com=self.request.user.id)
+
+
+class ResultsView(DetailView):
+    model = Comment
+    template_name = 'labs_app/test_generate.html'
+    context_object_name = 'comment'
+    slug_field = 'id_com'
+    slug_url_kwarg = 'slug'
