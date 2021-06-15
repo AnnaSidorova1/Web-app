@@ -37,6 +37,7 @@ class CommentForm(ModelForm):
                 'class': "form-control",     
                 'default':0,
                 'value': Comment.objects.count()+1,
-                'editable':False
+                'editable':False,
+                'readonly':"readonly"
             }),
         }
