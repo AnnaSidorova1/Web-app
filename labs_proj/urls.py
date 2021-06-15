@@ -24,4 +24,6 @@ urlpatterns = [
     path('add-comms', views.about, name='add'),
     path('', views.index, name='home'),
     path('feat', views.feat, name='feat'),
+    path('gener/<int:prod>/', views.gen_com),
+    path('com/<slug:slug>/', views.ResultsView.as_view(), name='detail')
 ]
